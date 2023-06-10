@@ -4,6 +4,7 @@ const sequelize = require('./config/connection');
 const { ApolloServer } = require('apollo-server-express');
 const { typeDefs } = require('./schemas/TypeDefs');
 const { resolvers } = require('./resolvers/Resolvers')
+const cors = require('cors');
 
 // import sequelize connection
 const app = express();
@@ -37,6 +38,7 @@ app.use(session({
     secure: false // in development 
   }
 }));
+app.use(cors())
 
 // sync sequelize models to the database, then turn on the server
 const sync = async () => {
