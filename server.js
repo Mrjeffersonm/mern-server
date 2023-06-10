@@ -9,9 +9,17 @@ const { resolvers } = require('./resolvers/Resolvers')
 const app = express();
 
 async function init() {
-    const server = new ApolloServer({ typeDefs, resolvers });
-    await server.start();
-    server.applyMiddleware({ app })
+    const server = new ApolloServer({ typeDefs, resolvers, 
+    context: async (context) => {
+      // console.log("Session:", context.req.session)
+      return { 
+        session: context.req.session,
+      };
+    }
+  });
+  
+  await server.start();
+  server.applyMiddleware({ app })
 };
 
 init()
@@ -23,7 +31,11 @@ app.use(session({
   secret: 'ahjgryuihlzn',
   resave: false,
   saveUninitialized: false,
-  
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 2,
+    sameSite: true,
+    secure: false // in development 
+  }
 }));
 
 // sync sequelize models to the database, then turn on the server
