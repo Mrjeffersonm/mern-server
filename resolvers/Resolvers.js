@@ -140,6 +140,10 @@ const resolvers = {
                 }
             );
             return true;
+        },
+        async logout(_, args, req) {
+            req.session.destroy();
+            return true;
         }
     },
     User: {
